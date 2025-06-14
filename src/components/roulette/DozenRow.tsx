@@ -1,11 +1,6 @@
 import TableButton from './TableButton';
 
-interface DozensRowProps {
-  dozens: Array<{ label: string; columnOrDozen: '1' | '2' | '3' }>;
-  onDozenBet: (dozen: '1' | '2' | '3') => void;
-}
-
-const DozensRow = ({ dozens, onDozenBet }: DozensRowProps) => {
+const DozenRow = ({ dozens, handleDoubleBetWithChip }) => {
   return (
     <tr>
       <td></td>
@@ -13,7 +8,13 @@ const DozensRow = ({ dozens, onDozenBet }: DozensRowProps) => {
         <td key={dozen.label} colSpan={4} className="p-0">
           <TableButton
             value={dozen.label}
-            onClick={() => onDozenBet(dozen.columnOrDozen)}
+            onClick={(e) =>
+              handleDoubleBetWithChip(
+                'dozen',
+                dozen.columnOrDozen,
+                e.currentTarget
+              )
+            }
             className="bg-blue-900 text-white w-full h-10 rounded-md"
           />
         </td>
@@ -23,4 +24,4 @@ const DozensRow = ({ dozens, onDozenBet }: DozensRowProps) => {
   );
 };
 
-export default DozensRow;
+export default DozenRow;

@@ -1,23 +1,24 @@
-import React from 'react';
+import type { FC, MouseEvent } from 'react';
 
-type TableButtonProps = {
+interface TableButtonProps {
   value: string | number;
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
-  onClick?: () => void;
-};
+}
 
-const TableButton: React.FC<TableButtonProps> = ({
+const TableButton: FC<TableButtonProps> = ({
   value,
-  className = '',
   onClick,
-}) => (
-  <button
-    className={`flex items-center justify-center font-semibold transition-all select-none cursor-pointer hover:brightness-150 hover:opacity-90 ${className}`}
-    onClick={onClick}
-    type="button"
-  >
-    {value}
-  </button>
-);
+  className = '',
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={`${className} transition-transform hover:scale-105 active:scale-95`}
+    >
+      {value}
+    </button>
+  );
+};
 
 export default TableButton;

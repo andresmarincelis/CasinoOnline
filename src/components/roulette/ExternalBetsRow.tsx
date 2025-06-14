@@ -1,14 +1,6 @@
 import TableButton from './TableButton';
 
-interface ExternalBetsRowProps {
-  externalBets: Array<{ label: string; betType: string }>;
-  onExternalBet: (betType: string) => void;
-}
-
-const ExternalBetsRow = ({
-  externalBets,
-  onExternalBet,
-}: ExternalBetsRowProps) => {
+const ExternalBetsRow = ({ externalBets, handleExternalBetWithChip }) => {
   return (
     <tr>
       <td></td>
@@ -16,7 +8,7 @@ const ExternalBetsRow = ({
         <td key={label} colSpan={2} className="p-0">
           <TableButton
             value={label}
-            onClick={() => onExternalBet(betType)}
+            onClick={(e) => handleExternalBetWithChip(betType, e.currentTarget)}
             className={`${
               label === 'Red'
                 ? 'bg-red-500'

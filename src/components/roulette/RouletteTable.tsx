@@ -1,36 +1,100 @@
-import NumberRows from './NumberRows';
-import ExternalBetsRow from './ExternalBetsRow';
+import { useRef, useState } from 'react';
+import Chip from './Chip';
+import {
+  useRouletteContext,
+  type BetType,
+} from '../../contexts/RouletteContext';
 import { dozens, externalBets, rows } from './utils';
-import DozensRow from './DozenRow';
-import { useRouletteContext } from '../../contexts/RouletteContext';
+import { NumberRow } from './NumberRow';
+import DozenRow from './DozenRow';
+import ExternalBetsRow from './ExternalBetsRow';
+import BetDisplay from './BetDisplay';
+
+interface ChipPosition {
+  id: string;
+  amount: number;
+  position: { x: number; y: number };
+}
 
 const RouletteTable = () => {
-  const { bets, handleExternalBet, handleDoubleBets, handleStraightBet, play } =
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
+  const { bets, handleExternalBet, handleDoubleBets, handleStraightBet } =
     useRouletteContext();
+
+  const addChip = (element: HTMLElement, amount: number, id: string) => {
+    const rect = element.getBoundingClientRect();
+    const tableRect = tableRef.current?.getBoundingClientRect();
+
+    if (tableRect) {
+      const position = {
+        x: rect.left - tableRect.left + rect.width / 2,
+        y: rect.top - tableRect.top + rect.height / 2,
+      };
+
+      setChipPositions((prev) => {
+        const existingChip = prev.find((chip) => chip.id === id);
+        if (existingChip) {
+          return prev.map((chip) =>
+            chip.id === id ? { ...chip, amount: chip.amount + amount } : chip
+          );
+        }
+        return [...prev, { id, amount, position }];
+      });
+    }
+  };
+
+  const handleStraightBetWithChip = (number: number, element: HTMLElement) => {
+    handleStraightBet(number);
+    addChip(element, 10000, `straight-${number}`);
+  };
+
+  const handleDoubleBetWithChip = (
+    type: 'column' | 'dozen',
+    value: '1' | '2' | '3',
+    element: HTMLElement
+  ) => {
+    handleDoubleBets(type, value);
+    addChip(element, 10000, `${type}-${value}`);
+  };
+
+  const handleExternalBetWithChip = (
+    betType: BetType,
+    element: HTMLElement
+  ) => {
+    handleExternalBet(betType);
+    addChip(element, 30000, `external-${betType}`);
+  };
 
   return (
     <div className="flex flex-col items-center">
-      <table className="border-separate border-spacing-2">
-        <tbody>
-          <NumberRows
-            rows={rows}
-            onStraightBet={handleStraightBet}
-            onColumnBet={(column) => handleDoubleBets('column', column)}
-          />
-          <DozensRow
-            dozens={dozens}
-            onDozenBet={(dozen) => handleDoubleBets('dozen', dozen)}
-          />
-          <ExternalBetsRow
-            externalBets={externalBets}
-            onExternalBet={handleExternalBet}
-          />
-        </tbody>
-      </table>
-      <button onClick={play}>Start</button>
-      <pre className="mt-4 text-xs text-white bg-slate-800 p-2 rounded max-w-xl w-full overflow-x-auto">
-        {JSON.stringify(bets, null, 2)}
-      </pre>
+      <div className="relative">
+        <table ref={tableRef} className="border-separate border-spacing-2">
+          <tbody>
+            {rows.map((row, rowIdx) => (
+              <NumberRow
+                key={rowIdx}
+                row={row}
+                rowIdx={rowIdx}
+                handleStraightBetWithChip={handleStraightBetWithChip}
+                handleDoubleBetWithChip={handleDoubleBetWithChip}
+              />
+            ))}
+            <DozenRow
+              dozens={dozens}
+              handleDoubleBetWithChip={handleDoubleBetWithChip}
+            />
+            <ExternalBetsRow
+              externalBets={externalBets}
+              handleExternalBetWithChip={handleExternalBetWithChip}
+            />
+          </tbody>
+        </table>
+        {chipPositions.map((chip) => (
+          <Chip key={chip.id} amount={chip.amount} position={chip.position} />
+        ))}
+      </div>
+      <BetDisplay bets={bets} />
     </div>
   );
 };

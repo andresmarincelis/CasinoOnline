@@ -33,3 +33,11 @@ export const dozens: { label: string; columnOrDozen: '1' | '2' | '3' }[] = [
   { label: '13 to 24', columnOrDozen: '2' },
   { label: '25 to 36', columnOrDozen: '3' },
 ];
+
+export const getChipImage = (amount: number): string => {
+  if (amount >= 100000)
+    return '/src/components/roulette/assets/chip_purple.png';
+  if (amount >= 50000) return '/src/components/roulette/assets/chip_blue.png';
+  if (amount >= 20000) return '/src/components/roulette/assets/chip_orange.png';
+  return '/src/components/roulette/assets/chip_black.png';
+};
