@@ -1,4 +1,8 @@
 import type { BetType } from '../../contexts/RouletteContext';
+import chipBlue from '../../assets/chip_blue.png';
+import chipBlack from '../../assets/chip_black.png';
+import chipPurple from '../../assets/chip_purple.png';
+import chipOrange from '../../assets/chip_orange.png';
 
 export const rouletteWheelNumbers = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
@@ -35,9 +39,8 @@ export const dozens: { label: string; columnOrDozen: '1' | '2' | '3' }[] = [
 ];
 
 export const getChipImage = (amount: number): string => {
-  if (amount >= 100000)
-    return '/src/components/roulette/assets/chip_purple.png';
-  if (amount >= 50000) return '/src/components/roulette/assets/chip_blue.png';
-  if (amount >= 20000) return '/src/components/roulette/assets/chip_orange.png';
-  return '/src/components/roulette/assets/chip_black.png';
+  if (amount >= 100000) return chipPurple;
+  if (amount >= 50000) return chipBlue;
+  if (amount >= 20000) return chipOrange;
+  return chipBlack;
 };
