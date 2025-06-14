@@ -1,4 +1,5 @@
 import { getChipImage } from './utils';
+import { formatNumberShort } from '../../utils/formatNumber';
 
 interface ChipProps {
   amount: number;
@@ -27,7 +28,7 @@ const Chip = ({ amount, position }: ChipProps) => {
         className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold"
         style={{ userSelect: 'none', pointerEvents: 'none' }}
       >
-        {amount}
+        {formatNumberShort(amount)}
       </div>
     </div>
   );

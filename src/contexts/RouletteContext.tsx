@@ -25,12 +25,13 @@ export interface RouletteContextInterface {
   winningNumber: number | null;
   loading: boolean;
   setLoading: (loading: boolean) => void;
-  handleExternalBet: (betType: BetType) => void;
+  handleExternalBet: (betType: BetType, amount: number) => void;
   handleDoubleBets: (
     type: 'column' | 'dozen',
-    columnOrDozen: ColumnOrDozenType
+    columnOrDozen: ColumnOrDozenType,
+    amount: number
   ) => void;
-  handleStraightBet: (number: number) => void;
+  handleStraightBet: (number: number, amount: number) => void;
   play: () => Promise<void>;
 }
 
@@ -47,14 +48,14 @@ export const RouletteProvider = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [winningNumber, setWinningNumber] = useState<number | null>(null);
 
-  const handleExternalBet = (betType: BetType) => {
+  const handleExternalBet = (betType: BetType, amount: number) => {
     setBets((prev) => {
       const idx = prev.findIndex((b) => b.betType === betType);
       if (idx !== -1) {
         const updated = [...prev];
         updated[idx] = {
           ...updated[idx],
-          betAmount: updated[idx].betAmount + 30000,
+          betAmount: updated[idx].betAmount + amount,
         };
         return updated;
       }
@@ -62,7 +63,7 @@ export const RouletteProvider = ({
         ...prev,
         {
           betType,
-          betAmount: 30000,
+          betAmount: amount,
         },
       ];
     });
@@ -70,7 +71,8 @@ export const RouletteProvider = ({
 
   const handleDoubleBets = (
     type: 'column' | 'dozen',
-    columnOrDozen: '1' | '2' | '3'
+    columnOrDozen: ColumnOrDozenType,
+    amount: number
   ) => {
     setBets((prev) => {
       const idx = prev.findIndex(
@@ -80,7 +82,7 @@ export const RouletteProvider = ({
         const updated = [...prev];
         updated[idx] = {
           ...updated[idx],
-          betAmount: updated[idx].betAmount + 10000,
+          betAmount: updated[idx].betAmount + amount,
         };
         return updated;
       }
@@ -88,14 +90,14 @@ export const RouletteProvider = ({
         ...prev,
         {
           betType: type,
-          betAmount: 10000,
+          betAmount: amount,
           columnOrDozen,
         },
       ];
     });
   };
 
-  const handleStraightBet = (number: number) => {
+  const handleStraightBet = (number: number, amount: number) => {
     setBets((prev) => {
       const straightIdx = prev.findIndex((b) => b.betType === 'straight');
       if (straightIdx !== -1) {
@@ -109,10 +111,10 @@ export const RouletteProvider = ({
         if (numIdx !== -1) {
           straightBet.betNumbers[numIdx] = {
             ...straightBet.betNumbers[numIdx],
-            amount: straightBet.betNumbers[numIdx].amount + 10000,
+            amount: straightBet.betNumbers[numIdx].amount + amount,
           };
         } else {
-          straightBet.betNumbers.push({ number, amount: 10000 });
+          straightBet.betNumbers.push({ number, amount });
         }
         const updated = [...prev];
         updated[straightIdx] = straightBet;
@@ -122,8 +124,8 @@ export const RouletteProvider = ({
         ...prev,
         {
           betType: 'straight',
-          betAmount: 10000,
-          betNumbers: [{ number, amount: 10000 }],
+          betAmount: amount,
+          betNumbers: [{ number, amount }],
         },
       ];
     });
@@ -137,7 +139,7 @@ export const RouletteProvider = ({
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJxS25Xd3BEd3NucFc2UTNzcSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzQ5OTM3Nzc5LCJleHAiOjE3NDk5NDEzNzl9.z1Oc7nJZC3Q8IacxlIyUEvTb5tCppauW9UrsAE6wNaE`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJxS25Xd3BEd3NucFc2UTNzcSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzQ5OTQyODA3LCJleHAiOjE3NDk5NDY0MDd9.hKBcBM5JSY7xegS2q3YSnRo68kZ-W1gYynl6Byy7Vvo`,
         },
       }
     );

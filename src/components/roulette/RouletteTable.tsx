@@ -46,7 +46,7 @@ const RouletteTable = ({ selectedChip }: { selectedChip: SelectedChip }) => {
   };
 
   const handleStraightBetWithChip = (number: number, element: HTMLElement) => {
-    handleStraightBet(number);
+    handleStraightBet(number, selectedChip.value);
     addChip(element, selectedChip.value, `straight-${number}`);
   };
 
@@ -55,7 +55,7 @@ const RouletteTable = ({ selectedChip }: { selectedChip: SelectedChip }) => {
     value: '1' | '2' | '3',
     element: HTMLElement
   ) => {
-    handleDoubleBets(type, value);
+    handleDoubleBets(type, value, selectedChip.value);
     addChip(element, selectedChip.value, `${type}-${value}`);
   };
 
@@ -63,7 +63,7 @@ const RouletteTable = ({ selectedChip }: { selectedChip: SelectedChip }) => {
     betType: BetType,
     element: HTMLElement
   ) => {
-    handleExternalBet(betType);
+    handleExternalBet(betType, selectedChip.value);
     addChip(element, selectedChip.value, `external-${betType}`);
   };
 
