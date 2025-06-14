@@ -1,0 +1,31 @@
+# Node modules (dependencias locales)
+node_modules/
+
+# Salida de build de Vite
+dist/
+
+# Archivos de log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Salida de directorios temporales de Vite
+.vite/
+
+# Archivos de entorno (variables sensibles)
+.env
+.env.local
+.env.*.local
+
+# Directorios del editor (VSCode, etc)
+.vscode/
+.idea/
+
+# Directorios de dependencias bloqueadas (opcional, si usas npm ci)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Salida de TypeScript (opcional, normalmente Vite lo maneja en memoria)
+*.tsbuildinfo
