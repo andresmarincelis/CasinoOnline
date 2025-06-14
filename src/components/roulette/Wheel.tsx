@@ -1,24 +1,22 @@
 import { animate, utils } from 'animejs';
 import { useEffect } from 'react';
 import './styles.css';
+import { rouletteWheelNumbers } from './utils';
+import { useRouletteContext } from '../../contexts/RouletteContext';
 
 export type WheelNumber = {
   next: number | string;
 };
 
-const Wheel = ({
-  rouletteNumbers,
-  number,
-}: {
-  rouletteNumbers: number[];
-  number: WheelNumber;
-}) => {
+const Wheel = () => {
+  const { winningNumber } = useRouletteContext();
+
   const totalNumbers = 37;
   const singleSpinDuration = 5000;
   const singleRotationDegree = 360 / totalNumbers;
   let lastNumber = 0;
 
-  const getIndex = (n: string) => rouletteNumbers.indexOf(parseInt(n));
+  const getIndex = (n: string) => rouletteWheelNumbers.indexOf(parseInt(n));
   const rotationFrom = (n: string) => singleRotationDegree * getIndex(n);
 
   const getRandomEnd = (min: number, max: number) =>
@@ -29,7 +27,21 @@ const Wheel = ({
     Math.abs(zero) + rotationFrom(n.toString());
   const ballSpins = (min: number, max: number) => 360 * utils.random(min, max);
 
+  function resetRotation() {
+    animate(['.layer-2', '.layer-4'], {
+      rotate: 0,
+      duration: 0,
+    });
+    animate('.ball-container', {
+      rotate: 0,
+      translateY: 0,
+      duration: 0,
+    });
+  }
+
   function spinWheel(number: number) {
+    resetRotation();
+
     const bezier = 'cubicBezier(0.165,0.84,0.44,1.005)';
     const end = -getRandomEnd(2, 4);
     const zeroR = zeroEnd(end);
@@ -58,9 +70,8 @@ const Wheel = ({
   }
 
   useEffect(() => {
-    const next = number.next;
-    if (next != null && next !== '') spinWheel(parseInt(String(next)));
-  }, [number]);
+    if (winningNumber != null) spinWheel(parseInt(String(winningNumber)));
+  }, [winningNumber]);
 
   return (
     <div className="roulette-wheel">

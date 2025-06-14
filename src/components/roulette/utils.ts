@@ -1,4 +1,4 @@
-import type { BetType } from '../../hooks/useRouletteBets';
+import type { BetType } from '../../contexts/RouletteContext';
 
 export const rouletteWheelNumbers = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
