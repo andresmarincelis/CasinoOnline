@@ -9,6 +9,7 @@ import { NumberRow } from './NumberRow';
 import DozenRow from './DozenRow';
 import ExternalBetsRow from './ExternalBetsRow';
 import BetDisplay from './BetDisplay';
+import type { SelectedChip } from '../../App';
 
 interface ChipPosition {
   id: string;
@@ -16,7 +17,7 @@ interface ChipPosition {
   position: { x: number; y: number };
 }
 
-const RouletteTable = () => {
+const RouletteTable = ({ selectedChip }: { selectedChip: SelectedChip }) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
   const { bets, handleExternalBet, handleDoubleBets, handleStraightBet } =
@@ -46,7 +47,7 @@ const RouletteTable = () => {
 
   const handleStraightBetWithChip = (number: number, element: HTMLElement) => {
     handleStraightBet(number);
-    addChip(element, 10000, `straight-${number}`);
+    addChip(element, selectedChip.value, `straight-${number}`);
   };
 
   const handleDoubleBetWithChip = (
@@ -55,7 +56,7 @@ const RouletteTable = () => {
     element: HTMLElement
   ) => {
     handleDoubleBets(type, value);
-    addChip(element, 10000, `${type}-${value}`);
+    addChip(element, selectedChip.value, `${type}-${value}`);
   };
 
   const handleExternalBetWithChip = (
@@ -63,7 +64,7 @@ const RouletteTable = () => {
     element: HTMLElement
   ) => {
     handleExternalBet(betType);
-    addChip(element, 30000, `external-${betType}`);
+    addChip(element, selectedChip.value, `external-${betType}`);
   };
 
   return (
