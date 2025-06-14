@@ -24,17 +24,65 @@ const externalBets = [
   { label: '19 to 36', betType: 'high' },
 ];
 
+const dozens: { label: string; columnOrDozen: '1' | '2' | '3' }[] = [
+  { label: '1 to 12', columnOrDozen: '1' },
+  { label: '13 to 24', columnOrDozen: '2' },
+  { label: '25 to 36', columnOrDozen: '3' },
+];
+
 const NumberGrid = () => {
   const [bets, setBets] = useState<any[]>([]);
 
   const handleExternalBet = (betType: string) => {
-    setBets((prev) => [
-      ...prev,
-      {
-        betType,
-        betAmount: 30000,
-      },
-    ]);
+    setBets((prev) => {
+      const idx = prev.findIndex((b) => b.betType === betType);
+      if (idx !== -1) {
+        // Ya existe, acumula el monto
+        const updated = [...prev];
+        updated[idx] = {
+          ...updated[idx],
+          betAmount: updated[idx].betAmount + 30000,
+        };
+        return updated;
+      }
+      // No existe, agrega nueva
+      return [
+        ...prev,
+        {
+          betType,
+          betAmount: 30000,
+        },
+      ];
+    });
+  };
+
+  const handleDoubleBets = (
+    type: 'column' | 'dozen',
+    columnOrDozen: '1' | '2' | '3'
+  ) => {
+    setBets((prev) => {
+      const idx = prev.findIndex(
+        (b) => b.betType === type && b.columnOrDozen === columnOrDozen
+      );
+      if (idx !== -1) {
+        // Ya existe, acumula el monto
+        const updated = [...prev];
+        updated[idx] = {
+          ...updated[idx],
+          betAmount: updated[idx].betAmount + 10000,
+        };
+        return updated;
+      }
+      // No existe, agrega nueva
+      return [
+        ...prev,
+        {
+          betType: type,
+          betAmount: 10000,
+          columnOrDozen,
+        },
+      ];
+    });
   };
 
   return (
@@ -65,6 +113,12 @@ const NumberGrid = () => {
               <td className="p-0">
                 <TableButton
                   value="2:1"
+                  onClick={() =>
+                    handleDoubleBets(
+                      'column',
+                      (3 - rowIdx).toString() as '1' | '2' | '3'
+                    )
+                  }
                   className="bg-blue-900 text-white w-14 h-10 rounded-md border border-blue-300"
                 />
               </td>
@@ -75,25 +129,15 @@ const NumberGrid = () => {
           <tr>
             {/* Celda vacía bajo el 0 */}
             <td></td>
-            {/* Cada docena ocupa 4 columnas */}
-            <td colSpan={4} className="p-0">
-              <TableButton
-                value="1 to 12"
-                className="bg-blue-900 text-white w-full h-10 rounded-md"
-              />
-            </td>
-            <td colSpan={4} className="p-0">
-              <TableButton
-                value="13 to 24"
-                className="bg-blue-900 text-white w-full h-10 rounded-md"
-              />
-            </td>
-            <td colSpan={4} className="p-0">
-              <TableButton
-                value="25 to 36"
-                className="bg-blue-900 text-white w-full h-10 rounded-md"
-              />
-            </td>
+            {dozens.map((dozen) => (
+              <td key={dozen.label} colSpan={4} className="p-0">
+                <TableButton
+                  value={dozen.label}
+                  onClick={() => handleDoubleBets('dozen', dozen.columnOrDozen)}
+                  className="bg-blue-900 text-white w-full h-10 rounded-md"
+                />
+              </td>
+            ))}
             {/* Celda vacía donde estaban los "2:1" */}
             <td></td>
           </tr>
