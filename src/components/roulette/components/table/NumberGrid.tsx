@@ -85,6 +85,46 @@ const NumberGrid = () => {
     });
   };
 
+  const handleStraightBet = (number: number) => {
+    setBets((prev) => {
+      // Busca si ya existe una apuesta 'straight'
+      const straightIdx = prev.findIndex((b) => b.betType === 'straight');
+      if (straightIdx !== -1) {
+        // Copia profunda de betNumbers
+        const straightBet = {
+          ...prev[straightIdx],
+          betNumbers: [...prev[straightIdx].betNumbers],
+        };
+        const numIdx = straightBet.betNumbers.findIndex(
+          (n: any) => n.number === number
+        );
+        if (numIdx !== -1) {
+          // Suma el amount al número existente
+          straightBet.betNumbers[numIdx] = {
+            ...straightBet.betNumbers[numIdx],
+            amount: straightBet.betNumbers[numIdx].amount + 10000,
+          };
+        } else {
+          // Agrega el número nuevo
+          straightBet.betNumbers.push({ number, amount: 10000 });
+        }
+        // Actualiza el array de apuestas
+        const updated = [...prev];
+        updated[straightIdx] = straightBet;
+        return updated;
+      }
+      // No existe apuesta straight, crea una nueva
+      return [
+        ...prev,
+        {
+          betType: 'straight',
+          betAmount: 10000,
+          betNumbers: [{ number, amount: 10000 }],
+        },
+      ];
+    });
+  };
+
   return (
     <div className="flex flex-col items-center">
       <table className="border-separate border-spacing-2">
@@ -96,6 +136,7 @@ const NumberGrid = () => {
                 <td rowSpan={3} className="align-middle p-0">
                   <TableButton
                     value={0}
+                    onClick={() => handleStraightBet(0)}
                     className="bg-green-500 text-white text-lg font-bold w-16 h-[120px] rounded-md"
                   />
                 </td>
@@ -104,6 +145,7 @@ const NumberGrid = () => {
                 <td key={n} className="p-0">
                   <TableButton
                     value={n}
+                    onClick={() => handleStraightBet(n)}
                     className={`${getColor(
                       n
                     )} text-white text-lg font-bold w-14 h-10 rounded-md`}
