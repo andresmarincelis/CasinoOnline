@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { createContext, useContext, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
+import { useGameContext } from './GameContext';
 
 export type ColumnOrDozenType = '1' | '2' | '3';
 export type BetType =
@@ -20,6 +27,12 @@ interface Bet {
   betNumbers?: { number: number; amount: number }[];
 }
 
+interface ChipPosition {
+  id: string;
+  amount: number;
+  position: { x: number; y: number };
+}
+
 export interface RouletteContextInterface {
   bets: Bet[];
   winningNumber: number | null;
@@ -33,6 +46,8 @@ export interface RouletteContextInterface {
   ) => void;
   handleStraightBet: (number: number, amount: number) => void;
   play: () => Promise<void>;
+  chipPositions: ChipPosition[];
+  setChipPositions: Dispatch<SetStateAction<ChipPosition[]>>;
 }
 
 const RouletteContext = createContext<RouletteContextInterface>(
@@ -46,9 +61,13 @@ export const RouletteProvider = ({
 }) => {
   const [bets, setBets] = useState<Bet[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
   const [winningNumber, setWinningNumber] = useState<number | null>(null);
 
+  const { setTotalBet } = useGameContext();
+
   const handleExternalBet = (betType: BetType, amount: number) => {
+    setTotalBet((prev) => prev + amount);
     setBets((prev) => {
       const idx = prev.findIndex((b) => b.betType === betType);
       if (idx !== -1) {
@@ -74,6 +93,7 @@ export const RouletteProvider = ({
     columnOrDozen: ColumnOrDozenType,
     amount: number
   ) => {
+    setTotalBet((prev) => prev + amount);
     setBets((prev) => {
       const idx = prev.findIndex(
         (b) => b.betType === type && b.columnOrDozen === columnOrDozen
@@ -98,6 +118,7 @@ export const RouletteProvider = ({
   };
 
   const handleStraightBet = (number: number, amount: number) => {
+    setTotalBet((prev) => prev + amount);
     setBets((prev) => {
       const straightIdx = prev.findIndex((b) => b.betType === 'straight');
       if (straightIdx !== -1) {
@@ -139,7 +160,7 @@ export const RouletteProvider = ({
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJxS25Xd3BEd3NucFc2UTNzcSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzQ5OTQyODA3LCJleHAiOjE3NDk5NDY0MDd9.hKBcBM5JSY7xegS2q3YSnRo68kZ-W1gYynl6Byy7Vvo`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJxS25Xd3BEd3NucFc2UTNzcSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzQ5OTYwNjY4LCJleHAiOjE3NDk5NjQyNjh9.WLtYqSoA-QejDkbz-a67TbvjJbUkBowHnI3QujbbvmE`,
         },
       }
     );
@@ -147,6 +168,9 @@ export const RouletteProvider = ({
     setWinningNumber(data.winningNumber);
     setBets([]);
     setLoading(false);
+    await new Promise((resolve) => setTimeout(resolve, 15000));
+    setWinningNumber(null);
+    setChipPositions([]);
   };
 
   return (
@@ -154,6 +178,8 @@ export const RouletteProvider = ({
       value={{
         bets,
         winningNumber,
+        chipPositions,
+        setChipPositions,
         handleExternalBet,
         handleDoubleBets,
         handleStraightBet,

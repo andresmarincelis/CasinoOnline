@@ -2,14 +2,12 @@ import ChipSelector from './ChipSelector';
 import Tabs from './Tabs';
 import BetAmount from './BetAmount';
 import VolumeControl from './VolumeControl';
-import type { SelectedChip } from '../../App';
+import { formatNumberShort } from '../../utils/formatNumber';
+import { useGameContext } from '../../contexts/GameContext';
 
-export interface BetSidebarProps {
-  selectedChip: SelectedChip;
-  setSelectedChip: (chip: SelectedChip) => void;
-}
+const BetSidebar = () => {
+  const { totalBet } = useGameContext();
 
-const BetSidebar = ({ selectedChip, setSelectedChip }: BetSidebarProps) => {
   return (
     <aside className="w-[340px] bg-[#14213d] rounded-2xl p-6 flex flex-col justify-between min-h-screen shadow-lg">
       {/* Tabs */}
@@ -34,14 +32,11 @@ const BetSidebar = ({ selectedChip, setSelectedChip }: BetSidebarProps) => {
           <div className="text-xs font-bold text-blue-200 mb-2 tracking-wider">
             PICK CHIP SIZE
           </div>
-          <ChipSelector
-            selectedChip={selectedChip}
-            setSelectedChip={setSelectedChip}
-          />
+          <ChipSelector />
         </div>
 
         {/* Bet Amount */}
-        <BetAmount amount="238.68K" currency="RS3" />
+        <BetAmount amount={formatNumberShort(totalBet)} currency="RS3" />
       </div>
 
       <VolumeControl />

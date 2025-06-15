@@ -3,21 +3,21 @@ import chipBlue from '../../assets/chip_blue.png';
 import chipBlack from '../../assets/chip_black.png';
 import chipPurple from '../../assets/chip_purple.png';
 import chipOrange from '../../assets/chip_orange.png';
-import type { SelectedChip } from '../../App';
+import {
+  useGameContext,
+  type Chip as ChipType,
+} from '../../contexts/GameContext';
 
-export interface ChipSelectorProps {
-  selectedChip: SelectedChip;
-  setSelectedChip: (chip: SelectedChip) => void;
-}
-
-const chips: SelectedChip[] = [
+const chips: ChipType[] = [
+  { label: '1K', imageSrc: chipPurple, value: 1000 },
   { label: '10K', imageSrc: chipBlue, value: 10000 },
+  { label: '50K', imageSrc: chipOrange, value: 50000 },
   { label: '100K', imageSrc: chipBlack, value: 100000 },
-  { label: '1M', imageSrc: chipPurple, value: 1000000 },
-  { label: '10M', imageSrc: chipOrange, value: 10000000 },
 ];
 
-const ChipSelector = ({ selectedChip, setSelectedChip }: ChipSelectorProps) => {
+const ChipSelector = () => {
+  const { selectedChip, setSelectedChip } = useGameContext();
+
   return (
     <div className="grid grid-cols-4 gap-3">
       {chips.map((chip, idx) => (

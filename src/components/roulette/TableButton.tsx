@@ -14,7 +14,7 @@ const TableButton: FC<TableButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`${className} transition-transform hover:scale-105 active:scale-95`}
+      className={`${className} transition-transform hover:scale-105 active:scale-95 hover:cursor-pointer hover:brightness-130`}
     >
       {value}
     </button>

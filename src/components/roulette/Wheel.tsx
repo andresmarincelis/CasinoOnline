@@ -1,5 +1,5 @@
 import { animate, utils } from 'animejs';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import './styles.css';
 import { rouletteWheelNumbers } from './utils';
 import { useRouletteContext } from '../../contexts/RouletteContext';
@@ -10,11 +10,13 @@ export type WheelNumber = {
 
 const Wheel = () => {
   const { winningNumber } = useRouletteContext();
+  const lastNumberRef = useRef(0);
+  const spinningInterval = useRef<any>(null);
+  const angleRef = useRef(0); // Mantener el ángulo acumulado
 
   const totalNumbers = 37;
   const singleSpinDuration = 5000;
   const singleRotationDegree = 360 / totalNumbers;
-  let lastNumber = 0;
 
   const getIndex = (n: string) => rouletteWheelNumbers.indexOf(parseInt(n));
   const rotationFrom = (n: string) => singleRotationDegree * getIndex(n);
@@ -27,9 +29,9 @@ const Wheel = () => {
     Math.abs(zero) + rotationFrom(n.toString());
   const ballSpins = (min: number, max: number) => 360 * utils.random(min, max);
 
-  function resetRotation() {
+  function resetRotation(keepAngle = true) {
     animate(['.layer-2', '.layer-4'], {
-      rotate: 0,
+      rotate: keepAngle ? angleRef.current : 0,
       duration: 0,
     });
     animate('.ball-container', {
@@ -37,10 +39,11 @@ const Wheel = () => {
       translateY: 0,
       duration: 0,
     });
+    if (!keepAngle) angleRef.current = 0;
   }
 
   function spinWheel(number: number) {
-    resetRotation();
+    resetRotation(false); // Solo resetea a 0 cuando hay spin real
 
     const bezier = 'cubicBezier(0.165,0.84,0.44,1.005)';
     const end = -getRandomEnd(2, 4);
@@ -49,14 +52,13 @@ const Wheel = () => {
 
     // Rueda
     animate(['.layer-2', '.layer-4'], {
-      rotate: [rotationFrom(lastNumber.toString()), end],
+      rotate: [0, end],
       duration: singleSpinDuration,
       easing: bezier,
-      update: () => {
-        // Opcional: logging por animación activa
-      },
+      update: () => {},
       complete: () => {
-        lastNumber = number;
+        lastNumberRef.current = number;
+        angleRef.current = end; // Cuando termina el spin, la rueda queda en la posición final
       },
     });
 
@@ -69,8 +71,25 @@ const Wheel = () => {
     });
   }
 
+  // Animación constante si no hay winningNumber
   useEffect(() => {
-    if (winningNumber != null) spinWheel(parseInt(String(winningNumber)));
+    if (winningNumber == null) {
+      if (spinningInterval.current) clearInterval(spinningInterval.current);
+      spinningInterval.current = setInterval(() => {
+        angleRef.current -= 2;
+        animate(['.layer-2', '.layer-4'], {
+          rotate: angleRef.current,
+          duration: 75,
+          easing: 'linear',
+        });
+      }, 75);
+      return () => {
+        if (spinningInterval.current) clearInterval(spinningInterval.current);
+      };
+    } else {
+      if (spinningInterval.current) clearInterval(spinningInterval.current);
+      spinWheel(parseInt(String(winningNumber)));
+    }
   }, [winningNumber]);
 
   return (
@@ -80,7 +99,7 @@ const Wheel = () => {
       <div className="layer-4 wheel" />
       <div className="layer-5" />
       <div className="ball-container">
-        <div className="ball" />
+        {winningNumber != null && <div className="ball" />}
       </div>
     </div>
   );

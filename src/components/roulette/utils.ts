@@ -39,8 +39,8 @@ export const dozens: { label: string; columnOrDozen: '1' | '2' | '3' }[] = [
 ];
 
 export const getChipImage = (amount: number): string => {
-  if (amount >= 100000) return chipPurple;
-  if (amount >= 50000) return chipBlue;
-  if (amount >= 20000) return chipOrange;
-  return chipBlack;
+  if (amount >= 100000) return chipBlack;
+  if (amount >= 50000) return chipOrange;
+  if (amount >= 10000) return chipBlue;
+  return chipPurple;
 };

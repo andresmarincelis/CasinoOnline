@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Chip from './Chip';
 import {
   useRouletteContext,
@@ -8,20 +8,19 @@ import { dozens, externalBets, rows } from './utils';
 import { NumberRow } from './NumberRow';
 import DozenRow from './DozenRow';
 import ExternalBetsRow from './ExternalBetsRow';
-import BetDisplay from './BetDisplay';
-import type { SelectedChip } from '../../App';
+import { useGameContext } from '../../contexts/GameContext';
 
-interface ChipPosition {
-  id: string;
-  amount: number;
-  position: { x: number; y: number };
-}
-
-const RouletteTable = ({ selectedChip }: { selectedChip: SelectedChip }) => {
+const RouletteTable = () => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
-  const { bets, handleExternalBet, handleDoubleBets, handleStraightBet } =
-    useRouletteContext();
+
+  const { selectedChip } = useGameContext();
+  const {
+    handleExternalBet,
+    handleDoubleBets,
+    handleStraightBet,
+    chipPositions,
+    setChipPositions,
+  } = useRouletteContext();
 
   const addChip = (element: HTMLElement, amount: number, id: string) => {
     const rect = element.getBoundingClientRect();
@@ -95,7 +94,9 @@ const RouletteTable = ({ selectedChip }: { selectedChip: SelectedChip }) => {
           <Chip key={chip.id} amount={chip.amount} position={chip.position} />
         ))}
       </div>
-      <BetDisplay bets={bets} />
+      {/* Ejemplo de botón para limpiar las fichas:
+      <button onClick={clearChips} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">Clear Chips</button>
+      */}
     </div>
   );
 };
