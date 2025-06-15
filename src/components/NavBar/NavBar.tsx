@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import HamburgerMenu from './HamburgerMenu';
 import Logo from './Logo';
-import Balance from './Balance';
-import UserMenu from './UserMenu';
-import Sidebar from './Sidebar';
+import Sidebar from '../sidebar/Sidebar';
+import UserDropdownMenu from './user/UserDropdownMenu';
+import BalanceDropdown from './BalanceDropdown';
+import CashierButton from './CashierButton';
 
 const NavBar: React.FC = () => {
-  // Valores de ejemplo, puedes conectar con tu lógica de estado/contexto
-  const rs3 = 0.02;
-  const osrs = 0.16;
-  const usdt = 0.0;
   const username = 'xxmb';
+  const usdt = 0.0;
 
   // Estado para el sidebar
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -24,12 +22,13 @@ const NavBar: React.FC = () => {
           <HamburgerMenu onClick={() => setSidebarOpen(true)} />
           <div className="flex flex-col">
             <Logo />
-            <Balance rs3={rs3} osrs={osrs} />
           </div>
         </div>
-        {/* Derecha: UserMenu */}
-        <div className="flex items-center">
-          <UserMenu username={username} usdt={usdt} />
+        {/* Derecha: BalanceDropdown, CashierButton, UserDropdownMenu */}
+        <div className="flex items-center space-x-3">
+          <BalanceDropdown balance={usdt} />
+          <CashierButton />
+          <UserDropdownMenu username={username} progress={70} />
         </div>
       </nav>
     </>

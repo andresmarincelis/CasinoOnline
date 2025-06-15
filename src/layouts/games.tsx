@@ -9,7 +9,7 @@ export default function GamesLayout() {
         className="w-full flex justify-center items-start rounded-r-2xl"
         style={{ minHeight: 'calc(100vh - 80px)' }}
       >
-        <div className="w-full max-w-7xl flex rounded-l-2xl rounded-r-2xl bg-[#1a3350]">
+        <div className="w-full max-w-7xl flex rounded-l-2xl rounded-r-2xl bg-[#1a3350] mt-5">
           <div className="flex-shrink-0" style={{ width: 340 }}>
             <BetSidebar />
           </div>
