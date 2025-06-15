@@ -171,6 +171,7 @@ export const RouletteProvider = ({
     await new Promise((resolve) => setTimeout(resolve, 15000));
     setWinningNumber(null);
     setChipPositions([]);
+    setTotalBet(0);
   };
 
   return (
