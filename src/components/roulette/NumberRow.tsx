@@ -25,7 +25,7 @@ export const NumberRow = ({
             onClick={(e) => handleStraightBetWithChip(n, e.currentTarget)}
             className={`${getColor(
               n
-            )} text-white text-lg font-bold w-14 h-10 rounded-md`}
+            )} text-white text-lg font-bold w-12 h-10 rounded-md`}
           />
         </td>
       ))}

@@ -23,12 +23,12 @@ const ChipSelector = () => {
 
   return (
     <div className="grid grid-cols-4 gap-3">
-      {chips.map((chip, idx) => (
-        <div className="flex justify-center items-center" key={chip.label}>
+      {chips?.map((chip, idx) => (
+        <div className="flex justify-center items-center" key={chip?.label}>
           <Chip
-            label={chip.label}
-            imageSrc={chip.imageSrc}
-            selected={selectedChip.label === chip.label}
+            label={chip?.label}
+            imageSrc={chip?.imageSrc}
+            selected={selectedChip?.label === chip?.label}
             onClick={() => setSelectedChip(chips[idx])}
           />
         </div>

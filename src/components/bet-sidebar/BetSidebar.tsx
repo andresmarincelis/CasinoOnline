@@ -9,7 +9,7 @@ const BetSidebar = () => {
   const { totalBet } = useGameContext();
 
   return (
-    <aside className="w-[340px] bg-[#14213d] rounded-2xl p-6 flex flex-col justify-between min-h-screen shadow-lg">
+    <aside className="w-[340px] bg-[#14213d] rounded-l-2xl flex flex-col p-6 justify-between h-full shadow-lg">
       {/* Tabs */}
       <div>
         <Tabs />
@@ -36,7 +36,7 @@ const BetSidebar = () => {
         </div>
 
         {/* Bet Amount */}
-        <BetAmount amount={formatNumberShort(totalBet)} currency="RS3" />
+        <BetAmount amount={formatNumberShort(totalBet || 0)} currency="RS3" />
       </div>
 
       <VolumeControl />
