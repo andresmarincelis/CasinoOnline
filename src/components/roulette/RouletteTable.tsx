@@ -94,9 +94,6 @@ const RouletteTable = () => {
           <Chip key={chip.id} amount={chip.amount} position={chip.position} />
         ))}
       </div>
-      {/* Ejemplo de botón para limpiar las fichas:
-      <button onClick={clearChips} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">Clear Chips</button>
-      */}
     </div>
   );
 };
