@@ -1,18 +1,16 @@
 import { animate, utils } from 'animejs';
 import { useEffect, useRef } from 'react';
-import './styles.css';
 import { rouletteWheelNumbers } from './utils';
 import { useRouletteContext } from '../../contexts/RouletteContext';
-
-export type WheelNumber = {
-  next: number | string;
-};
+import wheelImage from './assets/wheel.svg';
+import wheelPartImage from './assets/wheel_part.svg';
+import './styles.css';
 
 const Wheel = () => {
   const { winningNumber } = useRouletteContext();
   const lastNumberRef = useRef(0);
   const spinningInterval = useRef<any>(null);
-  const angleRef = useRef(0); // Mantener el ángulo acumulado
+  const angleRef = useRef(0);
 
   const totalNumbers = 37;
   const singleSpinDuration = 5000;
@@ -30,7 +28,7 @@ const Wheel = () => {
   const ballSpins = (min: number, max: number) => 360 * utils.random(min, max);
 
   function resetRotation(keepAngle = true) {
-    animate(['.layer-2', '.layer-4'], {
+    animate('.wheel-svg', {
       rotate: keepAngle ? angleRef.current : 0,
       duration: 0,
     });
@@ -43,26 +41,22 @@ const Wheel = () => {
   }
 
   function spinWheel(number: number) {
-    resetRotation(false); // Solo resetea a 0 cuando hay spin real
-
+    resetRotation(false);
     const bezier = 'cubicBezier(0.165,0.84,0.44,1.005)';
     const end = -getRandomEnd(2, 4);
     const zeroR = zeroEnd(end);
-    const ballRot = ballSpins(2, 4) + ballEnd(zeroR, number);
+    const ballRot = ballSpins(2, 4) + ballEnd(zeroR, number) + 3.5;
 
-    // Rueda
-    animate(['.layer-2', '.layer-4'], {
+    animate('.wheel-svg', {
       rotate: [0, end],
       duration: singleSpinDuration,
       easing: bezier,
-      update: () => {},
+
       complete: () => {
         lastNumberRef.current = number;
-        angleRef.current = end; // Cuando termina el spin, la rueda queda en la posición final
       },
     });
 
-    // Bola
     animate('.ball-container', {
       rotate: ballRot,
       translateY: [0, 20, 25, 50],
@@ -71,18 +65,17 @@ const Wheel = () => {
     });
   }
 
-  // Animación constante si no hay winningNumber
   useEffect(() => {
     if (winningNumber == null) {
       if (spinningInterval.current) clearInterval(spinningInterval.current);
       spinningInterval.current = setInterval(() => {
         angleRef.current -= 2;
-        animate(['.layer-2', '.layer-4'], {
+        animate('.wheel-svg', {
           rotate: angleRef.current,
-          duration: 75,
+          duration: 50,
           easing: 'linear',
         });
-      }, 75);
+      }, 50);
       return () => {
         if (spinningInterval.current) clearInterval(spinningInterval.current);
       };
@@ -94,14 +87,19 @@ const Wheel = () => {
 
   return (
     <div className="roulette-wheel">
-      <div className="layer-2 wheel" />
-      <div className="layer-3" />
-      <div className="layer-4 wheel" />
-      <div className="layer-5" />
+      <div className="wheel-svg">
+        <img src={wheelImage} alt="roulette wheel" className="wheel-base" />
+        <img
+          src={wheelPartImage}
+          alt="wheel part"
+          className="wheel-part-overlay"
+        />
+      </div>
       <div className="ball-container">
         {winningNumber != null && <div className="ball" />}
       </div>
     </div>
   );
 };
+
 export default Wheel;

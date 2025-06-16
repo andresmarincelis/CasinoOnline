@@ -5,6 +5,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
+import { type GameStrategy, type GameStrategyContext } from './GameStrategy';
 
 export interface Chip {
   label: string;
@@ -12,7 +13,7 @@ export interface Chip {
   imageSrc?: string;
 }
 
-export interface GameContextInterface {
+export interface GameContextInterface extends GameStrategyContext {
   selectedChip: Chip;
   totalBet: number;
   setSelectedChip: Dispatch<SetStateAction<Chip>>;
@@ -29,10 +30,22 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     label: '1K',
     value: 1000,
   });
+  const [strategy, setStrategy] = useState<GameStrategy>({
+    play: async () => {
+      console.warn('No game strategy set');
+    },
+  });
 
   return (
     <GameContext.Provider
-      value={{ selectedChip, totalBet, setSelectedChip, setTotalBet }}
+      value={{
+        selectedChip,
+        totalBet,
+        setSelectedChip,
+        setTotalBet,
+        strategy,
+        setStrategy,
+      }}
     >
       {children}
     </GameContext.Provider>

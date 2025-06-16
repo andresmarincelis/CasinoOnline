@@ -1,4 +1,4 @@
-import { useRouletteContext } from '../../contexts/RouletteContext';
+import { useGameContext } from '../../contexts/GameContext';
 
 interface BetAmountProps {
   amount: string; // Ejemplo: "238.68K"
@@ -6,7 +6,8 @@ interface BetAmountProps {
 }
 
 const BetAmount = ({ amount, currency = 'RS3' }: BetAmountProps) => {
-  const { play } = useRouletteContext();
+  const { strategy } = useGameContext();
+
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between mb-1">
@@ -21,7 +22,7 @@ const BetAmount = ({ amount, currency = 'RS3' }: BetAmountProps) => {
       </div>
       <button
         className="w-full bg-green-400 hover:bg-green-500 text-white font-bold py-3 rounded-lg text-lg shadow transition"
-        onClick={play}
+        onClick={() => strategy.play()}
       >
         Bet
       </button>

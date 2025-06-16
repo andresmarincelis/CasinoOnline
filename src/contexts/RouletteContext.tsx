@@ -5,8 +5,10 @@ import {
   useState,
   type Dispatch,
   type SetStateAction,
+  useEffect,
 } from 'react';
 import { useGameContext } from './GameContext';
+import { type GameStrategy } from './GameStrategy';
 
 export type ColumnOrDozenType = '1' | '2' | '3';
 export type BetType =
@@ -64,7 +66,7 @@ export const RouletteProvider = ({
   const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
   const [winningNumber, setWinningNumber] = useState<number | null>(null);
 
-  const { setTotalBet } = useGameContext();
+  const { setTotalBet, setStrategy } = useGameContext();
 
   const handleExternalBet = (betType: BetType, amount: number) => {
     setTotalBet((prev) => prev + amount);
@@ -153,6 +155,7 @@ export const RouletteProvider = ({
   };
 
   const play = async () => {
+    console.log('ASDF: ', bets);
     if (!bets.length) return;
     const response = await axios.post(
       'http://localhost:3002/roulette/start',
@@ -160,10 +163,12 @@ export const RouletteProvider = ({
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJxS25Xd3BEd3NucFc2UTNzcSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzQ5OTYwNjY4LCJleHAiOjE3NDk5NjQyNjh9.WLtYqSoA-QejDkbz-a67TbvjJbUkBowHnI3QujbbvmE`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJMUmtXRzZRTndyTW01Tmp1eSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzUwMDM5NDI4LCJleHAiOjE3NTAwNDMwMjh9.D3OVeZW2mt28krkYGIcfRzsIl8yi8uoW2U5G33_Hk3M`,
         },
       }
     );
+    console.log('AAAA');
+
     const data = response.data;
     setWinningNumber(data.winningNumber);
     setBets([]);
@@ -173,6 +178,13 @@ export const RouletteProvider = ({
     setChipPositions([]);
     setTotalBet(0);
   };
+
+  useEffect(() => {
+    const rouletteStrategy: GameStrategy = {
+      play,
+    };
+    setStrategy(rouletteStrategy);
+  }, [bets, setStrategy]);
 
   return (
     <RouletteContext.Provider
