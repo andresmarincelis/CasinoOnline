@@ -162,7 +162,7 @@ export const RouletteProvider = ({
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJMUmtXRzZRTndyTW01Tmp1eSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzUwMDgyODU4LCJleHAiOjE3NTAwODY0NTh9.y8gkevJT3w3T7KykqUIJWWZtv-TH8jUJuUuqUnmp0DQ`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJMUmtXRzZRTndyTW01Tmp1eSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzUwMTA0MzAzLCJleHAiOjE3NTAxMDc5MDN9.8gwZTEpwPzhL9v-ZBfu0zCexj395POmUMjc31dl5gP4`,
         },
       }
     );
