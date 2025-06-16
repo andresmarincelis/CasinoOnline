@@ -155,7 +155,6 @@ export const RouletteProvider = ({
   };
 
   const play = async () => {
-    console.log('ASDF: ', bets);
     if (!bets.length) return;
     const response = await axios.post(
       'http://localhost:3002/roulette/start',
@@ -163,11 +162,10 @@ export const RouletteProvider = ({
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJMUmtXRzZRTndyTW01Tmp1eSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzUwMDM5NDI4LCJleHAiOjE3NTAwNDMwMjh9.D3OVeZW2mt28krkYGIcfRzsIl8yi8uoW2U5G33_Hk3M`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJMUmtXRzZRTndyTW01Tmp1eSIsImVtYWlsIjoiZGllZ29jZXJkYWNlbGlzQGhvdG1haWwuY29tIiwiaWF0IjoxNzUwMDgyODU4LCJleHAiOjE3NTAwODY0NTh9.y8gkevJT3w3T7KykqUIJWWZtv-TH8jUJuUuqUnmp0DQ`,
         },
       }
     );
-    console.log('AAAA');
 
     const data = response.data;
     setWinningNumber(data.winningNumber);

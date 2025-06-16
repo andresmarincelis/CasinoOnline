@@ -20,7 +20,7 @@ const Chip = ({ amount, position }: ChipProps) => {
       <img
         src={getChipImage(amount)}
         alt={`Chip ${amount}`}
-        className="w-8 h-8 select-none"
+        className="w-10 h-10 select-none"
         draggable={false}
         style={{ userSelect: 'none', pointerEvents: 'none' }}
       />

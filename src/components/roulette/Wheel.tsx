@@ -45,7 +45,7 @@ const Wheel = () => {
     const bezier = 'cubicBezier(0.165,0.84,0.44,1.005)';
     const end = -getRandomEnd(2, 4);
     const zeroR = zeroEnd(end);
-    const ballRot = ballSpins(2, 4) + ballEnd(zeroR, number) + 3.5;
+    const ballRot = ballSpins(2, 4) + ballEnd(zeroR, number) + 5;
 
     animate('.wheel-svg', {
       rotate: [0, end],

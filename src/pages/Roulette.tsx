@@ -6,7 +6,7 @@ export const Roulette = () => {
   return (
     <RouletteProvider>
       <div className="w-full flex flex-col items-center justify-center rounded-r-2xl py-4">
-        <div>
+        <div className="my-10">
           <Wheel />
         </div>
         <RouletteTable />
