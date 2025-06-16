@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router';
 import MainLayout from './layouts/main';
 import { Roulette } from './pages/Roulette';
 import GamesLayout from './layouts/games';
+import BlackjackPage from './components/blackjackpage/BlackJackPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
 
         <Route element={<GamesLayout />}>
           <Route path="/roulette" element={<Roulette />} />
+          <Route path="/blackjack" element={<BlackjackPage />} />
         </Route>
       </Route>
     </Routes>

@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from 'react';
 
 interface AuthContextInterface {
   isAuthenticated: boolean;
@@ -13,38 +19,29 @@ export const AuthContext = createContext<AuthContextInterface>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useState<string>('');
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
-  async function login(email: string, password: string) {
-    try {
-      const url = 'http://localhost:3001';
-      const response = await axios.post(
-        `${url}/login`,
-        { email, password },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-      const data = response.data;
-      console.log(data);
-      setAccessToken(data.accessToken);
-      setAuthenticated(true);
-    } catch (error: any) {
-      console.log(error);
+  async function login() {}
+
+  function logout() {}
+
+  // NO TOCAR
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      setIsAuthenticated(false);
+      setAccessToken('');
+      return;
     }
-  }
 
-  function logout() {
-    setAccessToken('');
-    setAuthenticated(false);
-  }
+    // Request al backend a authentication para validar si ese accessToken es valido o no
+    // Token es valido
+    setAccessToken(accessToken);
+    setIsAuthenticated(true);
+  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, accessToken, login, logout }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => useContext(AuthContext);
