@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import Modal from "../Modal";
 
 interface BetAmountProps {
   total: number;
@@ -8,19 +9,10 @@ interface BetAmountProps {
 
 const BetAmount: React.FC<BetAmountProps> = ({ total, onPlaceBet }) => {
   const [accessToken, setAccessToken] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const login = async () => {
-    const response = await axios.post(
-      "http://localhost:3001/login",
-      {
-        email: "andresmarincelis@gmail.com",
-        password: "123456",
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
-    const data = response.data;
-    setAccessToken(data.accessToken);
-    console.log(data);
+  const login = () => {
+    setIsModalOpen(true);
   };
 
   const start = async () => {
@@ -52,6 +44,8 @@ const BetAmount: React.FC<BetAmountProps> = ({ total, onPlaceBet }) => {
       >
         Start
       </button>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
