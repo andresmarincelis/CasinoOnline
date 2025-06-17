@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   createContext,
   useContext,
   useEffect,
   useState,
   type ReactNode,
-} from 'react';
+} from "react";
 
 interface AuthContextInterface {
   isAuthenticated: boolean;
@@ -19,29 +19,63 @@ export const AuthContext = createContext<AuthContextInterface>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<string>("");
 
-  async function login() {}
+  async function login(email: string, password: string) {
+    try {
+      const response = await axios.post("http://localhost:3001/login", {
+        email,
+        password,
+      });
 
-  function logout() {}
+      const token = response.data.accessToken;
+      setAccessToken(token);
+      setIsAuthenticated(true);
+      localStorage.setItem("accessToken", token);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function logout() {
+    setAccessToken("");
+    setIsAuthenticated(false);
+    localStorage.removeItem("accessToken");
+  }
 
   // NO TOCAR
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       setIsAuthenticated(false);
-      setAccessToken('');
+      setAccessToken("");
       return;
     }
 
     // Request al backend a authentication para validar si ese accessToken es valido o no
-    // Token es valido
-    setAccessToken(accessToken);
-    setIsAuthenticated(true);
+    const validateToken = async () => {
+      try {
+        await axios.get("http://localhost:3001/validate", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        setAccessToken(accessToken);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.log(error);
+        logout();
+      }
+    };
+    validateToken();
   }, []);
 
-  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ isAuthenticated, accessToken, login, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuthContext = () => useContext(AuthContext);

@@ -1,26 +1,16 @@
-import axios from "axios";
 import React, { useState } from "react";
+import { useAuthContext } from "../contexts/AuthContext";
+import { AiOutlineClose } from "react-icons/ai";
+import { FaUser } from "react-icons/fa";
 
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   isOpen,
   onClose,
 }) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [accessToken, setAccessToken] = useState("");
-
-  const login = async () => {
-    const response = await axios.post(
-      "http://localhost:3001/login",
-      {
-        email: "andresmarincelis@gmail.com",
-        password: "123456",
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
-    const data = response.data;
-    setAccessToken(data.accessToken);
-    console.log(data);
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useAuthContext();
 
   if (!isOpen) return null;
 
@@ -29,10 +19,11 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       <div className="bg-indigo-900 rounded-lg shadow-lg p-6 w-96 h-120 relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-black text-sm w-4 h-4 flex items-center justify-center rounded-full bg-gray-600"
+          className="absolute top-2 right-2 text-black text-sm w-6 h-6 flex items-center justify-center rounded-full bg-gray-600"
         >
-          X
+          <AiOutlineClose />
         </button>
+
         <div className="flex items-center justify-center my-12">
           <button
             className={`py-2 px-4 rounded ${
@@ -53,17 +44,31 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         </div>
         {isLogin ? (
           <form>
-            <input
-              type="email"
-              placeholder="Enter Email"
-              className="border border-gray-300 rounded p-2 mb-4 w-full bg-indigo-950"
-            />
+            <div className="flex items-center border border-gray-300 rounded mb-4 bg-indigo-950">
+              <FaUser className="text-gray-400 ml-2" />
+              <input
+                type="email"
+                placeholder="Enter Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="p-2 bg-indigo-950 w-full outline-none"
+              />
+            </div>
             <input
               type="password"
               placeholder="Enter Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="border border-gray-300 rounded p-2 mb-4 w-full bg-indigo-950"
             />
-            <button className="bg-blue-500 text-white py-2 px-4 rounded w-full">
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                await login(email, password);
+                onClose();
+              }}
+              className="bg-blue-500 text-white py-2 px-4 rounded w-full"
+            >
               Sign In
             </button>
           </form>
@@ -92,7 +97,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <button
               onClick={(e) => {
                 e.preventDefault();
-                login();
+                console.log("Hacer registro");
               }}
               className="bg-green-500 text-white py-2 px-4 rounded w-full"
             >
