@@ -1,15 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
+import { useWalletContext } from '../../contexts/WalletContext';
+import { formatNumberShort } from '../../utils/formatNumber';
 
 interface BalanceDropdownProps {
-  balance: number;
   onClick?: () => void;
 }
 
-const BalanceDropdown: React.FC<BalanceDropdownProps> = ({
-  balance,
-  //   onClick,
-}) => {
+const BalanceDropdown: React.FC<BalanceDropdownProps> = () => {
+  const { wallet } = useWalletContext();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,13 +35,15 @@ const BalanceDropdown: React.FC<BalanceDropdownProps> = ({
         type="button"
       >
         <img
-          src={''}
+          src={
+            'https://images.seeklogo.com/logo-png/32/1/tether-usdt-logo-png_seeklogo-323175.png'
+          }
           alt="USDT"
           className="w-7 h-7 rounded-full bg-white p-1"
         />
         <div className="flex flex-col items-start">
           <span className="text-white font-bold text-base leading-5">
-            {balance.toFixed(2)}
+            {formatNumberShort(wallet.balance)}
           </span>
           <span className="text-blue-200 text-xs font-semibold leading-4">
             USDT
