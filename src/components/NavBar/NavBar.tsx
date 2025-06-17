@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
-import Sidebar from '../sidebar/Sidebar';
-import HamburgerMenu from './HamburgerMenu';
-import BalanceDropdown from './BalanceDropdown';
-import CashierButton from './CashierButton';
-import UserDropdownMenu from './user/UserDropdownMenu';
-import Logo from './Logo';
+import HamburgerMenu from "./HamburgerMenu";
+import UserDropdownMenu from "./user/UserDropdownMenu";
+import BalanceDropdown from "./BalanceDropdown";
+import CashierButton from "./CashierButton";
+import Logo from "./Logo";
 
-const NavBar: React.FC = () => {
-  const username = 'xxmb';
-  const usdt = 0.0;
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+const NavBar = ({
+  setShowSidebar,
+}: {
+  setShowSidebar: (show: boolean) => void;
+}) => {
+  const username = "xxmb";
 
   return (
     <>
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <nav className="fixed top-0 w-full h-20 bg-[#111F36] z-10 flex items-center justify-between px-4">
+      <nav className="fixed top-0 w-full h-20 bg-blue-950 z-10 flex items-center justify-between px-4">
+        {/* Izquierda: Menú hamburguesa y logo */}
         <div className="flex items-center space-x-3">
-          <HamburgerMenu onClick={() => setSidebarOpen(true)} />
+          <HamburgerMenu onClick={() => setShowSidebar(true)} />
           <div className="flex flex-col">
             <Logo />
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <BalanceDropdown balance={usdt} />
+          <BalanceDropdown />
           <CashierButton />
           <UserDropdownMenu username={username} progress={70} />
         </div>

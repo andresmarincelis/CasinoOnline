@@ -1,7 +1,33 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
+import { images } from '../assets';
 
-const games = ['DICE', 'CRASH', 'BLACKJACK', 'BACCARAT', 'WAR', 'ROULETTE'];
+const games: { name: string; img: string }[] = [
+  {
+    name: 'dice',
+    img: images.games.Dice,
+  },
+  {
+    name: 'crash',
+    img: 'https://runechat.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fcrash.8e03885a.webp&w=750&q=75',
+  },
+  {
+    name: 'blackjack',
+    img: images.games.Blackjack,
+  },
+  {
+    name: 'mines',
+    img: images.games.Mines,
+  },
+  {
+    name: 'war',
+    img: images.games.DragonTower,
+  },
+  {
+    name: 'roulette',
+    img: images.games.Roulette,
+  },
+];
 
 const MainContent: React.FC = () => {
   const navigate = useNavigate();
@@ -25,11 +51,14 @@ const MainContent: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 mb-10">
           {games.map((game) => (
             <div
-              onClick={() => navigate(`/${game.toLowerCase()}`)}
-              key={game}
-              className="bg-blue-800 rounded-xl flex flex-col items-center justify-center aspect-square text-white font-bold text-lg shadow hover:bg-blue-700 transition-colors cursor-pointer select-none relative"
+              onClick={() => navigate(`/${game.name}`)}
+              className="cursor-pointer hover:scale-105"
             >
-              {game}
+              <img
+                src={game.img}
+                alt={`${game.name} icon`}
+                className="rounded-xl"
+              />
             </div>
           ))}
         </div>
